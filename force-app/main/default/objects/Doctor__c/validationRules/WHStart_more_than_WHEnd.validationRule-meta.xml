@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WHStart_more_than_WHEnd</fullName>
+    <active>true</active>
+    <description>Правило, запрещающее создание записи Doctor, если Working Hours Start &gt; Working Hours End</description>
+    <errorConditionFormula>Working_Hours_Start__c &gt; Working_Hours_End__c</errorConditionFormula>
+    <errorMessage>Working Hours Start должно быть меньше либо равно Working Hours End.</errorMessage>
+</ValidationRule>
