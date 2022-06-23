@@ -1,0 +1,81 @@
+<apex:page controller="MasterPageController" extensions="PaginatingController">
+    <apex:sectionHeader title="Appointments table"></apex:sectionHeader>
+    <apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockSection >
+            <apex:selectList value="{!selectedDoctorName}" multiselect="false" size="1">
+                <apex:outputText style="margin-right: 20px; color: #4a4a56; font-weight: bold; margin-left: 25%" value="Select a doctor"></apex:outputText>
+				<apex:selectOptions value="{!doctorsOptions}">
+                </apex:selectOptions>
+                <apex:actionSupport event="onchange" action="{!updateDoctor}" rerender="hoursOut, table, paginating" status="status"/>
+            </apex:selectList>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection >
+			<apex:outputLink target="_blank" style="text-decoration: none" styleClass="btn" value="https://brave-otter-w905nu-dev-ed.lightning.force.com/lightning/o/Doctor__c/new?count=1&nooverride=1&useRecordTypeCheck=1&navigationLocation=LIST_VIEW&uid=165593276088711368&backgroundContext=%2Flightning%2Fo%2FDoctor__c%2Flist%3FfilterName%3DRecent">
+            	Add New Doctor
+            </apex:outputLink>
+        </apex:pageBlockSection>
+            
+    <apex:outputPanel id="hoursOut">
+        <apex:actionstatus id="status" startText="LOADING">
+            <apex:facet name="stop">
+                <apex:outputPanel >
+                    <apex:pageBlockSection >
+                    	<apex:outputField value="{!selectedDoctor.Working_Hours_Start__c}"/>
+                    </apex:pageBlockSection>
+					<apex:pageBlockSection >
+                    	<apex:outputField value="{!selectedDoctor.Working_Hours_End__c}"/>              
+                    </apex:pageBlockSection>
+
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputPanel>
+        
+    <apex:pageBlockSection >
+        <apex:selectList value="{!selectedPatientName}" multiselect="false" size="1">
+            <apex:outputText style="margin-right: 20px; color: #4a4a56; font-weight: bold; margin-left: 20%" value="Select a patient"></apex:outputText>
+            <apex:selectOptions value="{!patientsOptions}"/>
+        </apex:selectList><p/>
+    </apex:pageBlockSection>
+        
+    <apex:pageBlockSection >
+		<apex:outputLink target="_blank" style="text-decoration: none" styleClass="btn" value="https://brave-otter-w905nu-dev-ed.lightning.force.com/lightning/o/Patient__c/new?count=1&nooverride=1&useRecordTypeCheck=1&navigationLocation=LIST_VIEW&uid=165593361659782941&backgroundContext=%2Flightning%2Fo%2FPatient__c%2Flist%3FfilterName%3DRecent">
+        	Add New Patient
+        </apex:outputLink>
+    </apex:pageBlockSection>
+        
+    <apex:pageBlockSection >
+        <apex:inputField label="Appointment date" value="{!app.Appointment_Date__c}" required="false"/>
+    </apex:pageBlockSection>
+    
+    <apex:pageBlockSection >
+        <apex:inputField label="Duration in minutes" value="{!app.Duration_in_minutes__c}" required="false"/>
+    </apex:pageBlockSection>
+    
+    <apex:pageBlockSection >
+    <apex:commandButton value="Add New Appointment" action="{!saveApp}" rerender="table, paginating, messPanel"/>
+        <apex:outputPanel id="messPanel">
+        	<apex:outputText style="color: red" rendered="{!errMess}" value="The date is already taken"/>            
+        </apex:outputPanel>
+    </apex:pageBlockSection>
+    
+    <apex:pageBlockTable value="{!apps}" var="item" id="table">
+    	<apex:column headerValue="Action">
+    		<apex:outputLink value="{!'/'&item.Id}">View</apex:outputLink>
+		</apex:column>
+    	<apex:column headerValue="Doctor's Name" value="{!item.Doctor__c}"/>
+    	<apex:column headerValue="Patient's Name" value="{!item.Patient__c}"/>
+    	<apex:column headerValue="Date" value="{!item.Appointment_Date__c}"/>
+        <apex:column headerValue="Duration " value="{!item.Duration_in_minutes__c} minutes"/>
+  	</apex:pageBlockTable>    
+    
+    <apex:pageBlockSection id="paginating" columns="3">
+    	<apex:commandButton action="{!previous}" disabled="{!!hasPrevious}" rerender="table,paginating" value="Previous"/>
+        <apex:outputText >{!pageNumber} / {!totalPages}</apex:outputText>
+    	<apex:commandButton action="{!next}" disabled="{!!hasNext}" rerender="table,paginating" value="Next"/>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>
